@@ -1,6 +1,8 @@
 import h from 'helix-react/lib/html'
 import {Models} from '../../model'
 
+import Nav from '../../components/nav-bar'
+
 function layout (page: Helix.Page<Models>): Helix.Page<Models> {
   return {
     onEnter: page.onEnter,
@@ -9,7 +11,7 @@ function layout (page: Helix.Page<Models>): Helix.Page<Models> {
     view (state, prev, actions) {
       return (
         <div>
-          Lunch Club
+          <Nav />
           <div>
             {page.view(state, prev, actions)}
           </div>
