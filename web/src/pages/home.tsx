@@ -21,10 +21,13 @@ const page: Helix.Page<Models> = {
               className='mb-4'
               img={'https://www2.shutterstock.com/blog/wp-content/uploads/sites/5/2014/11/img64.jpg'}
               card={(
-                <div className='fw-500 d-flex align-items-center'>
+                <a
+                  className='d-ib bra-3 ph-3 pv-2 bg-primary fc-white fw-500 d-flex align-items-center'
+                  href='/create/venue'
+                >
                   {`You're Captain`}
                   <span className='d-ib ml-2 ss-right fs-small' />
-                </div>
+                </a>
               )}
             />
             <LunchesList

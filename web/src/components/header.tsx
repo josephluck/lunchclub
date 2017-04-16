@@ -27,9 +27,7 @@ function Header ({
           transform: 'translateY(50%)',
         }}
       >
-        <div className='d-ib bra-3 ph-3 pv-2 bg-primary fc-white'>
-          {card}
-        </div>
+        {card}
       </div>
     </div>
   )

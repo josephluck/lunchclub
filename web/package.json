@@ -15,7 +15,10 @@
     "test": "echo \"Error: no test specified.\""
   },
   "dependencies": {
+    "@types/googlemaps": "^3.26.8",
+    "debounce-promise": "^3.0.1",
     "faker": "^4.1.0",
+    "google-map-react": "^0.24.0",
     "helix-react": "git://github.com/josephluck/helix-react",
     "moment": "^2.18.1"
   },
