@@ -11,6 +11,7 @@
     "dist:browserify": "browserify lib/index.js > dist/index.js",
     "dist:assets": "cp -R src/assets dist/assets && cp src/index.html dist/index.html && cp src/index.html dist/200.html",
     "dist:minify": "uglifyjs ./dist/index.js --compress --mangle -o ./dist/index.js",
+    "dist:deploy": "surge --project ./dist --domain lunchclub.surge.sh",
     "test": "echo \"Error: no test specified.\""
   },
   "dependencies": {
