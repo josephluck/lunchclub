@@ -2,6 +2,7 @@ import h from 'helix-react/lib/html'
 
 import {Models} from '../model'
 import LunchesList from '../components/lunches-list'
+import Header from '../components/header'
 
 const page: Helix.Page<Models> = {
   view (state, prev, actions) {
@@ -16,7 +17,16 @@ const page: Helix.Page<Models> = {
       return isCaptain && !decided
         ? (
           <div>
-            {'Captain - Not Decided'}
+            <Header
+              className='mb-4'
+              img={'https://www2.shutterstock.com/blog/wp-content/uploads/sites/5/2014/11/img64.jpg'}
+              card={(
+                <div className='fw-500 d-flex align-items-center'>
+                  {`You're Captain`}
+                  <span className='d-ib ml-2 ss-right fs-small' />
+                </div>
+              )}
+            />
             <LunchesList
               className='ph-3'
               lunches={lunches}
