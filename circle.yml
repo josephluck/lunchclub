@@ -2,4 +2,4 @@ deployment:
   production:
     branch: master
     commands:
-      - cd ./web && npm run dist && surge --project ./dist --domain lunchclub.surge.sh
+      - cd ./web && npm install && npm run dist && surge --project ./dist --domain lunchclub.surge.sh
