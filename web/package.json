@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "faker": "^4.1.0",
-    "helix-react": "git://github.com/josephluck/helix-react"
+    "helix-react": "git://github.com/josephluck/helix-react",
+    "moment": "^2.18.1"
   },
   "author": "",
   "license": "ISC",

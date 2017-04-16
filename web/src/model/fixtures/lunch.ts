@@ -2,14 +2,14 @@ import * as random from 'faker'
 
 import invite from './invite'
 import place from './place'
-import person from './person'
+import user from './user'
 
 export type Status = 'pending' | 'created' | 'complete'
 
 export default function (status) {
   return {
     status,
-    captain: person(),
+    captain: user,
     where: status !== 'pending' ? place() : null,
     when: status !== 'pending' ? random.date.future() : null,
     invites: status !== 'pending'

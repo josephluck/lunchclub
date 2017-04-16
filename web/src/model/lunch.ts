@@ -2,7 +2,10 @@ import {Models} from './'
 
 import lunchFixture from './fixtures/lunch'
 
-export interface State {}
+export interface State {
+  lunch: any
+  lunches: any[]
+}
 
 export interface Reducers {}
 
@@ -23,6 +26,13 @@ export function model (): Helix.ModelImpl<Models, State, Reducers, Effects> {
     state: {
       lunch: lunchFixture(currentStatus),
       lunches: [
+        lunchFixture('complete'),
+        lunchFixture('complete'),
+        lunchFixture('complete'),
+        lunchFixture('complete'),
+        lunchFixture('complete'),
+        lunchFixture('complete'),
+        lunchFixture('complete'),
         lunchFixture('complete'),
         lunchFixture('complete'),
         lunchFixture('complete'),
