@@ -2,7 +2,9 @@ import {Models} from './'
 
 import user from './fixtures/user'
 
-export interface State {}
+export interface State {
+  user: any
+}
 
 export interface Reducers {
   setUser: Helix.Reducer<Models, State, any>

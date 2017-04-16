@@ -4,9 +4,9 @@ import person from './person'
 
 export type Status = 'created' | 'complete'
 
-export default function (status: Status) {
+export default function (status: Status, user?: any) {
   return {
-    who: person(),
+    who: user ? user : person(),
     accepted: random.random.boolean(),
     review: status === 'complete' ? random.lorem.paragraph() : null,
   }

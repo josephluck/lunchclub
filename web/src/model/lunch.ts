@@ -24,7 +24,7 @@ export function model (): Helix.ModelImpl<Models, State, Reducers, Effects> {
   // const currentStatus = 'complete'
   return {
     state: {
-      lunch: lunchFixture(currentStatus),
+      lunch: lunchFixture(currentStatus, true),
       lunches: [
         lunchFixture('complete'),
         lunchFixture('complete'),
@@ -38,7 +38,7 @@ export function model (): Helix.ModelImpl<Models, State, Reducers, Effects> {
         lunchFixture('complete'),
         lunchFixture('complete'),
         lunchFixture('complete'),
-      ]
+      ],
     },
     reducers: {},
     effects: {},
