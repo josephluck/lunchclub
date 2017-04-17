@@ -9,8 +9,8 @@ const Alert = ({
 }) => {
   const user = state.authentication.user
   const lunch = state.lunch.lunch
-  const decided = lunch.status !== 'pending'
-  if (user) {
+  if (user && lunch) {
+    const decided = lunch.status !== 'pending'
     const inviteAccepted = decided ? lunch.invites.find(invite => invite.who.id === user.id).accepted : false
     if (decided) {
       if (inviteAccepted === true) {
@@ -44,6 +44,7 @@ function layout (page: Helix.Page<Models>): Helix.Page<Models> {
   return {
     onEnter (state, prev, actions) {
       actions.authentication.login()
+      actions.lunch.fetchAll()
       if (page.onEnter) {
         page.onEnter(state, prev, actions)
       }

@@ -1,15 +1,17 @@
 import {Models} from './'
 
-import lunchFixture from './fixtures/lunch'
-
 export interface State {
   lunch: any
   lunches: any[]
 }
 
-export interface Reducers {}
+export interface Reducers {
+  setLunches: Helix.Reducer<Models, State, any[]>
+}
 
-export interface Effects {}
+export interface Effects {
+  fetchAll: Helix.Effect0<Models>
+}
 
 export type Actions = Helix.Actions<Reducers, Effects>
 
@@ -18,29 +20,28 @@ export interface Namespace { 'lunch': ModelApi }
 
 export type ModelApi = Helix.ModelApi<State, Actions>
 
-export function model (): Helix.ModelImpl<Models, State, Reducers, Effects> {
-  const currentStatus = 'pending'
-  // const currentStatus = 'created'
-  // const currentStatus = 'complete'
+export function model ({
+  api,
+}): Helix.ModelImpl<Models, State, Reducers, Effects> {
   return {
     state: {
-      lunch: lunchFixture(currentStatus, true),
-      lunches: [
-        lunchFixture('complete'),
-        lunchFixture('complete'),
-        lunchFixture('complete'),
-        lunchFixture('complete'),
-        lunchFixture('complete'),
-        lunchFixture('complete'),
-        lunchFixture('complete'),
-        lunchFixture('complete'),
-        lunchFixture('complete'),
-        lunchFixture('complete'),
-        lunchFixture('complete'),
-        lunchFixture('complete'),
-      ],
+      lunch: null,
+      lunches: [],
     },
-    reducers: {},
-    effects: {},
+    reducers: {
+      setLunches: (state, lunches) => ({lunches}),
+    },
+    effects: {
+      fetchAll (state, actions) {
+        return new Promise(resolve => {
+          const ref = api.database().ref('lunches').orderByChild('created')
+          ref.on('value', snapshot => {
+            let lunches = []
+            snapshot.forEach(lunch => lunches.push({id: lunch.key, ...lunch.val()}))
+            resolve(actions.lunch.setLunches(lunches))
+          })
+        })
+      },
+    },
   }
 }

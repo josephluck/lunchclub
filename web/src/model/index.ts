@@ -1,4 +1,3 @@
-import * as Login from './login'
 import * as Lunch from './lunch'
 import * as Authentication from './authentication'
 import * as MapSearch from './map-search'
@@ -7,7 +6,6 @@ import deps from './dependencies'
 const dependencies = deps()
 
 export type Models = Helix.Models<
-  Login.Namespace &
   Lunch.Namespace &
   Authentication.Namespace &
   MapSearch.Namespace &
@@ -20,8 +18,7 @@ export default function () {
     reducers: {},
     effects: {},
     models: {
-      [Login.namespace]: Login.model(),
-      [Lunch.namespace]: Lunch.model(),
+      [Lunch.namespace]: Lunch.model(dependencies),
       [Authentication.namespace]: Authentication.model(dependencies),
       [MapSearch.namespace]: MapSearch.model(dependencies),
     },
