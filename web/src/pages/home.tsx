@@ -4,6 +4,7 @@ import * as moment from 'moment'
 import {Models} from '../model'
 import LunchesList from '../components/lunches-list'
 import Header from '../components/header'
+import LunchView from '../components/lunch-view'
 
 const isFuture = (time) => moment(time).isAfter(moment())
 
@@ -18,9 +19,10 @@ const page: Helix.Page<Models> = {
     const TopSection = () => {
       if (lunchInTheFuture) {
         return (
-          <div>
-            {'Lunch view'}
-          </div>
+          <LunchView
+            state={state}
+            actions={actions}
+          />
         )
       } else if (lunchNotFinishedCreating) {
         return (
@@ -72,10 +74,14 @@ const page: Helix.Page<Models> = {
     return (
       <div>
         <TopSection />
-        <LunchesList
-          className='ph-3'
-          lunches={lunches.filter(lunch => lunch.status === 'created')}
-        />
+        {!lunchInTheFuture ?
+          (
+            <LunchesList
+              className='ph-3'
+              lunches={lunches.filter(lunch => lunch.status === 'created')}
+            />
+          ) : null
+        }
       </div>
     )
   },

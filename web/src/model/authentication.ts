@@ -39,7 +39,13 @@ export function model ({
         if (!state.authentication.token) {
           api.auth().signInWithPopup(googleAuthProvider).then((result) => {
             const token = result.credential.accessToken
-            const user = result.user
+            const user = {
+              id: result.user.uid,
+              name: result.user.displayName,
+              email: result.user.email,
+              avatar: result.user.photoURL,
+            }
+            actions.users.create(user)
             window.localStorage.setItem('token', token)
             actions.authentication.setToken(token)
             actions.authentication.setUser(user)

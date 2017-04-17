@@ -7,7 +7,8 @@ function layout (page: Helix.Page<Models>): Helix.Page<Models> {
   return {
     onEnter (state, prev, actions) {
       actions.authentication.login()
-      actions.lunch.fetchAll()
+      actions.users.fetch()
+      actions.lunch.fetch()
       if (page.onEnter) {
         page.onEnter(state, prev, actions)
       }

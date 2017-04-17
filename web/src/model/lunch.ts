@@ -11,7 +11,7 @@ export interface Reducers {
 }
 
 export interface Effects {
-  fetchAll: Helix.Effect0<Models>
+  fetch: Helix.Effect0<Models>
   create: Helix.Effect0<Models>
   update: Helix.Effect<Models, any>
   updatePlace: Helix.Effect<Models, any>
@@ -47,10 +47,9 @@ export function model ({
       setLunches: (state, lunches) => ({lunches}),
     },
     effects: {
-      fetchAll (state, actions) {
+      fetch (state, actions) {
         const ref = api.database().ref('lunches').orderByChild('time')
         ref.on('value', snapshot => {
-          console.log('fetchAll value ref listener fired')
           const lunchesVals = snapshot.val()
           if (lunchesVals) {
             const lunches = Object.keys(lunchesVals).map(key => {
@@ -66,10 +65,17 @@ export function model ({
       create (state, actions) {
         const ref = api.database().ref(`lunches/${random.random.uuid()}`)
         const captain = state.authentication.user.uid
+        const invites = state.users.users.reduce((prev, curr) => {
+          return {
+            ...prev,
+            [curr.id]: null,
+          }
+        }, {})
         ref.set({
           status: 'pending',
           captain,
           invites: {
+            ...invites,
             [captain]: true,
           },
         })
