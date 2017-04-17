@@ -1,8 +1,8 @@
 import h from 'helix-react/lib/html'
 
-// import ListItem from './list-item'
-// import Rating from './rating'
-// import prettyDate from '../utils/pretty-date'
+import ListItem from './list-item'
+import Rating from './rating'
+import prettyDate from '../utils/pretty-date'
 
 const LunchesList = ({
   lunches,
@@ -10,24 +10,24 @@ const LunchesList = ({
 }) => (
   <div className={`${className}`}>
     {lunches.map((lunch, index) => {
-      return (
-        <div key={index}>{lunch.id}</div>
-      )
+      if (lunch.status === 'pending') {
+        return (
+          <ListItem
+            key={index}
+            className={index !== 0 ? 'bt' : ''}
+            avatar={lunch.place.avatar}
+            primary={lunch.place.name}
+            secondary={prettyDate(lunch.time)}
+            right={(
+              <Rating
+                rating={lunch.place.rating}
+              />
+            )}
+          />
+        )
+      }
     })}
   </div>
 )
 
 export default LunchesList
-
-/*<ListItem
-  key={index}
-  className={index !== 0 ? 'bt' : ''}
-  avatar={lunch.where.image}
-  primary={lunch.where.name}
-  secondary={prettyDate(lunch.when)}
-  right={(
-    <Rating
-      rating={lunch.where.rating}
-    />
-  )}
-/>*/

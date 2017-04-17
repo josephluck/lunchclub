@@ -7,12 +7,10 @@ export interface State {
 }
 
 export interface Reducers {
-  setLunch: Helix.Reducer<Models, State, any>
   setLunches: Helix.Reducer<Models, State, any[]>
 }
 
 export interface Effects {
-  listen: Helix.Effect<Models, any>
   create: Helix.Effect0<Models>
   update: Helix.Effect<Models, any>
   fetchAll: Helix.Effect0<Models>
@@ -30,44 +28,41 @@ export function model ({
 }): Helix.ModelImpl<Models, State, Reducers, Effects> {
   return {
     state: {
-      lunch: null,
       lunches: [],
     },
+    computed (state) {
+      return {
+        lunch: state.lunches.length ? state.lunches[0] : null,
+      }
+    },
     reducers: {
-      setLunch: (state, lunch) => ({lunch}),
       setLunches: (state, lunches) => ({lunches}),
     },
     effects: {
-      listen (state, actions, id) {
-        const ref = api.database().ref(`lunches/${id}`)
-        ref.on('value', snapshot => {
-          actions.lunch.setLunch({
-            id: snapshot.key,
-            ...snapshot.val(),
-          })
-        })
-        return ref
-      },
       create (state, actions) {
-        const ref = actions.lunch.listen(random.random.uuid())
+        const ref = api.database().ref(`lunches/${random.random.uuid()}`)
         ref.set({
           status: 'incomplete',
           captain: state.authentication.user.uid,
         })
       },
       update (state, actions, payload) {
-        const ref = actions.lunch.listen(state.lunch.lunch.id)
+        const ref = api.database().ref(`lunches/${state.lunch.lunch.id}`)
         ref.update(payload)
       },
       fetchAll (state, actions) {
-        const ref = api.database().ref('lunches').orderByChild('created')
+        const ref = api.database().ref('lunches').orderByChild('time')
         ref.on('value', snapshot => {
-          let lunches = []
-          snapshot.forEach(lunch => lunches.push({id: lunch.key, ...lunch.val()}))
-          actions.lunch.setLunches(lunches)
-          if (lunches.length) {
-            actions.lunch.setLunch(lunches[0])
-            actions.lunch.listen(lunches[0].id)
+          console.log('fetchAll value ref listener fired')
+          const lunchesVals = snapshot.val()
+          if (lunchesVals) {
+            const lunches = Object.keys(lunchesVals).map(key => {
+              return {
+                id: key,
+                ...lunchesVals[key],
+              }
+            })
+            actions.lunch.setLunches(lunches)
           }
         })
       },

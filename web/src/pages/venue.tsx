@@ -7,14 +7,14 @@ import GoogleMap from '../components/map'
 
 const page: Helix.Page<Models> = {
   view (state, prev, actions) {
-    const localState = state['map-search']
+    const localState = state.create
     return (
       <div>
         <div className='w-100 h-9 pos-relative'>
           <GoogleMap
             onMapCreated={(map) => {
-              actions['map-search'].setMap(map)
-              actions['map-search'].getNearbyPlaces()
+              actions.create.setMap(map)
+              actions.create.getNearbyPlaces()
             }}
           />
           <div
@@ -25,7 +25,7 @@ const page: Helix.Page<Models> = {
           >
             <TextField
               placeholder={'Search for a Venue'}
-              oninput={actions['map-search'].search}
+              oninput={actions.create.search}
               value={localState.query}
               autoFocus
             />
@@ -36,8 +36,8 @@ const page: Helix.Page<Models> = {
           {localState.places.map((place: google.maps.places.PlaceResult, index) => {
             const avatar = place.photos && place.photos.length
               ? place.photos[0].getUrl({
-                maxHeight: 100,
-                maxWidth: 100,
+                maxHeight: 1000,
+                maxWidth: 1000,
               })
               : ''
 
@@ -49,7 +49,15 @@ const page: Helix.Page<Models> = {
                 primary={place.name}
                 secondary={place.formatted_address || place.vicinity}
                 onClick={() => {
-                  actions.create.addPlace(place.place_id)
+                  actions.create.addPlace({
+                    id: place.place_id,
+                    name: place.name,
+                    rating: place.rating,
+                    address: place.formatted_address || place.vicinity,
+                    avatar,
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng(),
+                  })
                   actions.location.set(`/create/${place.place_id}/time`)
                 }}
                 right={(

@@ -7,7 +7,8 @@ declare namespace Helix {
 
   // Create model implemetation to check whether a model is implemented correctly
   export interface ModelImpl<M extends {state: any, actions: any}, S, R, E> {
-    state: S,
+    state: Partial<S>,
+    computed?: (state: S) => Partial<S>,
     reducers: ReducersImpl<R>,
     effects: EffectsImpl<E>,
     models?: {

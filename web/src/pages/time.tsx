@@ -19,7 +19,7 @@ const page: Helix.Page<Models> = {
                 <span className='fc-primary ss-navigateright' />
               )}
               onClick={() => {
-                actions.create.addTime(time.format())
+                actions.create.addTime(time.valueOf())
                 actions.location.set('/')
               }}
             />

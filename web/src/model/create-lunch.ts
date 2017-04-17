@@ -19,8 +19,8 @@ export interface Effects {
   search: Helix.Effect<Models, string>
   getNearbyPlaces: Helix.Effect0<Models>
   searchPlaces: Helix.Effect<Models, string>
-  addPlace: Helix.Effect<Models, string>
-  addTime: Helix.Effect<Models, string>
+  addPlace: Helix.Effect<Models, any>
+  addTime: Helix.Effect<Models, number>
 }
 
 export type Actions = Helix.Actions<Reducers, Effects>
