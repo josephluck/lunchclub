@@ -39,10 +39,10 @@ export function model ({
     },
     effects: {
       listen (state, actions, id) {
-        const ref = api.database.ref(`lunches/${id}`)
+        const ref = api.database().ref(`lunches/${id}`)
         ref.on('value', snapshot => {
           actions.lunch.setLunch({
-            id: snapshot.id,
+            id: snapshot.key,
             ...snapshot.val(),
           })
         })
@@ -51,12 +51,13 @@ export function model ({
       create (state, actions) {
         const ref = actions.lunch.listen(random.random.uuid())
         ref.set({
+          status: 'incomplete',
           captain: state.authentication.user.uid,
         })
       },
       update (state, actions, payload) {
         const ref = actions.lunch.listen(state.lunch.lunch.id)
-        ref.set(payload)
+        ref.update(payload)
       },
       fetchAll (state, actions) {
         const ref = api.database().ref('lunches').orderByChild('created')

@@ -1,10 +1,12 @@
 import * as debounce from 'debounce-promise'
+import * as moment from 'moment'
 import {Models} from './'
 
 export interface State {
   map: any
   query: string
   places: any[]
+  times: moment.Moment[]
 }
 
 export interface Reducers {
@@ -17,12 +19,14 @@ export interface Effects {
   search: Helix.Effect<Models, string>
   getNearbyPlaces: Helix.Effect0<Models>
   searchPlaces: Helix.Effect<Models, string>
+  addPlace: Helix.Effect<Models, string>
+  addTime: Helix.Effect<Models, string>
 }
 
 export type Actions = Helix.Actions<Reducers, Effects>
 
-export const namespace: keyof Namespace = 'map-search'
-export interface Namespace { 'map-search': ModelApi }
+export const namespace: keyof Namespace = 'create'
+export interface Namespace { 'create': ModelApi }
 
 export type ModelApi = Helix.ModelApi<State, Actions>
 
@@ -34,6 +38,7 @@ export function model ({
       map: null,
       query: '',
       places: [],
+      times: createTimes(),
     },
     reducers: {
       setQuery (state, query) {
@@ -74,6 +79,12 @@ export function model ({
           centerMap(map, bounds)
         })
       }, 1000),
+      addPlace (state, actions, place) {
+        actions.lunch.update({ place })
+      },
+      addTime (state, actions, time) {
+        actions.lunch.update({ status: 'pending', time })
+      },
     },
   }
 }
@@ -104,4 +115,17 @@ function addMarkersToMap (map: google.maps.Map, places: google.maps.places.Place
     bounds.extend(loc)
   })
   return bounds
+}
+
+function createTimes (): moment.Moment[] {
+  let endTime = moment().add(1, 'days').startOf('day')
+  let timeStops = []
+  let startTime = moment().add('m', 15 - moment().minute() % 15)
+
+  while (startTime <= endTime) {
+    timeStops.push(moment(startTime))
+    startTime.add('m', 15)
+  }
+
+  return timeStops
 }

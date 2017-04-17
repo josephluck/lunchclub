@@ -48,7 +48,10 @@ const page: Helix.Page<Models> = {
                 avatar={avatar}
                 primary={place.name}
                 secondary={place.formatted_address || place.vicinity}
-                onClick={() => actions.location.set(`/create/${place.place_id}/time`)}
+                onClick={() => {
+                  actions.create.addPlace(place.place_id)
+                  actions.location.set(`/create/${place.place_id}/time`)
+                }}
                 right={(
                   <Rating rating={Math.round(place.rating)} />
                 )}

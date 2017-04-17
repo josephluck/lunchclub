@@ -2,16 +2,6 @@ import h from 'helix-react/lib/html'
 import {Models} from '../model'
 import ListItem from '../components/list-item'
 
-const times = [
-  new Date().getTime(),
-  new Date().getTime(),
-  new Date().getTime(),
-  new Date().getTime(),
-  new Date().getTime(),
-  new Date().getTime(),
-  new Date().getTime(),
-]
-
 const page: Helix.Page<Models> = {
   view (state, prev, actions) {
     return (
@@ -19,15 +9,19 @@ const page: Helix.Page<Models> = {
         <div>
           {state.location.params.venueId}
         </div>
-        {times.map((time, index) => {
+        {state.create.times.map((time, index) => {
           return (
             <ListItem
               key={index}
               className={index !== 0 ? 'bt' : ''}
-              primary={time}
+              primary={time.format('h:mm a')}
               right={(
                 <span className='fc-primary ss-navigateright' />
               )}
+              onClick={() => {
+                actions.create.addTime(time.format())
+                actions.location.set('/')
+              }}
             />
           )
         })}
