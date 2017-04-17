@@ -3,8 +3,6 @@ import {Models} from '../model'
 import TextField from '../components/text-field'
 import ListItem from '../components/list-item'
 import Rating from '../components/rating'
-// import RatingStars from '../components/rating-stars'
-// import PriceIndicator from '../components/price-indicator'
 import GoogleMap from '../components/map'
 
 const page: Helix.Page<Models> = {
@@ -50,6 +48,7 @@ const page: Helix.Page<Models> = {
                 avatar={avatar}
                 primary={place.name}
                 secondary={place.formatted_address || place.vicinity}
+                onClick={() => actions.location.set(`/create/${place.place_id}/time`)}
                 right={(
                   <Rating rating={Math.round(place.rating)} />
                 )}
@@ -63,14 +62,3 @@ const page: Helix.Page<Models> = {
 }
 
 export default page
-/*(
-  <div className='fs-tiny'>
-    <RatingStars
-      rating={place.rating}
-      className='mr-2'
-    />
-    <PriceIndicator
-      price={place.price_level}
-    />
-  </div>
-)*/

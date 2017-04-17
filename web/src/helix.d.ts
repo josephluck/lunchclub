@@ -42,12 +42,12 @@ declare namespace Helix {
 
   // Effects
   export type Effect<M extends Models<any>, P> = {
-    impl: (state: M['state'], actions: M['actions'], payload: P) => Promise<M['state']>,
-    api: (payload: P) => Promise<M['state']>,
+    impl: (state: M['state'], actions: M['actions'], payload: P) => any
+    api: (payload: P) => any
   }
   export type Effect0<M extends Models<any>> = {
-    impl: (state: M['state'], actions: M['actions']) => Promise<M['state']>,
-    api: () => Promise<M['state']>,
+    impl: (state: M['state'], actions: M['actions']) => any
+    api: () => any
   }
 
   // Scoped models
@@ -69,12 +69,12 @@ declare namespace Helix {
     api: () => S,
   }
   export type ScopedEffect<S, A, P> = {
-    impl: (state: S, actions: A, payload: P) => Promise<S>,
-    api: (payload: P) => Promise<S>,
+    impl: (state: S, actions: A, payload: P) => any
+    api: (payload: P) => any
   }
   export type ScopedEffect0<S, A> = {
-    impl: (state: S, actions: A) => Promise<S>,
-    api: () => Promise<S>,
+    impl: (state: S, actions: A) => any
+    api: () => any
   }
 
   // Base location model

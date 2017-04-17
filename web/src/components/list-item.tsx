@@ -2,10 +2,11 @@ import h from 'helix-react/lib/html'
 
 interface Props {
   className?: string
-  avatar: string
+  avatar?: string
   primary: any
   secondary?: any
   right: any
+  onClick?: () => any
 }
 
 function ListItem ({
@@ -14,19 +15,26 @@ function ListItem ({
   primary,
   secondary,
   right,
+  onClick = () => null
 }: Props) {
   return (
     <div
       className={`d-flex align-items-center bc-grey-100 ${className} pv-3`}
+      onClick={onClick}
     >
-      <div
-        className='mr-3 d-flex align-items-center'
-      >
-        <img
-          src={avatar}
-          className='w-5 h-5 bra-pill of-hidden'
-        />
-      </div>
+      {avatar
+        ? (
+          <div
+            className='mr-3 d-flex align-items-center'
+          >
+            <img
+              src={avatar}
+              className='w-5 h-5 bra-pill of-hidden'
+            />
+          </div>
+        )
+        : null
+      }
       <div
         className='flex-1'
       >

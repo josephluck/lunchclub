@@ -37,12 +37,12 @@ export function model ({
     effects: {
       login (state, actions) {
         if (!state.authentication.token) {
-          return api.auth().signInWithPopup(googleAuthProvider).then((result) => {
+          api.auth().signInWithPopup(googleAuthProvider).then((result) => {
             const token = result.credential.accessToken
             const user = result.user
             window.localStorage.setItem('token', token)
             actions.authentication.setToken(token)
-            return actions.authentication.setUser(user)
+            actions.authentication.setUser(user)
           })
         }
         api.auth().onAuthStateChanged((user) => {
