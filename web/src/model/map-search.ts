@@ -81,6 +81,9 @@ export function model ({
 function centerMap (map: google.maps.Map, bounds) {
   map.fitBounds(bounds)
   map.panToBounds(bounds)
+  if (map.getZoom() > 15) {
+    map.setZoom(15)
+  }
 }
 
 let markers = []
