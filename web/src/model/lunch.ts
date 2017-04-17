@@ -11,9 +11,11 @@ export interface Reducers {
 }
 
 export interface Effects {
+  fetchAll: Helix.Effect0<Models>
   create: Helix.Effect0<Models>
   update: Helix.Effect<Models, any>
-  fetchAll: Helix.Effect0<Models>
+  updatePlace: Helix.Effect<Models, any>
+  updateTime: Helix.Effect<Models, number>
 }
 
 export type Actions = Helix.Actions<Reducers, Effects>
@@ -31,25 +33,20 @@ export function model ({
       lunches: [],
     },
     computed (state) {
-      return {
-        lunch: state.lunches.length ? state.lunches[0] : null,
+      if (state.lunches.length) {
+        return {
+          lunch: state.lunches[0],
+        }
+      } else {
+        return {
+          lunch: null,
+        }
       }
     },
     reducers: {
       setLunches: (state, lunches) => ({lunches}),
     },
     effects: {
-      create (state, actions) {
-        const ref = api.database().ref(`lunches/${random.random.uuid()}`)
-        ref.set({
-          status: 'incomplete',
-          captain: state.authentication.user.uid,
-        })
-      },
-      update (state, actions, payload) {
-        const ref = api.database().ref(`lunches/${state.lunch.lunch.id}`)
-        ref.update(payload)
-      },
       fetchAll (state, actions) {
         const ref = api.database().ref('lunches').orderByChild('time')
         ref.on('value', snapshot => {
@@ -65,6 +62,27 @@ export function model ({
             actions.lunch.setLunches(lunches)
           }
         })
+      },
+      create (state, actions) {
+        const ref = api.database().ref(`lunches/${random.random.uuid()}`)
+        const captain = state.authentication.user.uid
+        ref.set({
+          status: 'pending',
+          captain,
+          invites: {
+            [captain]: true,
+          },
+        })
+      },
+      update (state, actions, payload) {
+        const ref = api.database().ref(`lunches/${state.lunch.lunch.id}`)
+        ref.update(payload)
+      },
+      updatePlace (state, actions, place) {
+        actions.lunch.update({ place })
+      },
+      updateTime (state, actions, time) {
+        actions.lunch.update({ status: 'created', time })
       },
     },
   }

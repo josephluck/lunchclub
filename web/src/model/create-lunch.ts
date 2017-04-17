@@ -19,8 +19,6 @@ export interface Effects {
   search: Helix.Effect<Models, string>
   getNearbyPlaces: Helix.Effect0<Models>
   searchPlaces: Helix.Effect<Models, string>
-  addPlace: Helix.Effect<Models, any>
-  addTime: Helix.Effect<Models, number>
 }
 
 export type Actions = Helix.Actions<Reducers, Effects>
@@ -79,12 +77,6 @@ export function model ({
           centerMap(map, bounds)
         })
       }, 1000),
-      addPlace (state, actions, place) {
-        actions.lunch.update({ place })
-      },
-      addTime (state, actions, time) {
-        actions.lunch.update({ status: 'pending', time })
-      },
     },
   }
 }

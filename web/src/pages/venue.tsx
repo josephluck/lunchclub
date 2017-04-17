@@ -49,7 +49,7 @@ const page: Helix.Page<Models> = {
                 primary={place.name}
                 secondary={place.formatted_address || place.vicinity}
                 onClick={() => {
-                  actions.create.addPlace({
+                  actions.lunch.updatePlace({
                     id: place.place_id,
                     name: place.name,
                     rating: place.rating,
@@ -58,7 +58,7 @@ const page: Helix.Page<Models> = {
                     lat: place.geometry.location.lat(),
                     lng: place.geometry.location.lng(),
                   })
-                  actions.location.set(`/create/${place.place_id}/time`)
+                  actions.location.set(`/create/time`)
                 }}
                 right={(
                   <Rating rating={Math.round(place.rating)} />

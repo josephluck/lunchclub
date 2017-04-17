@@ -7,5 +7,5 @@ import time from './time'
 export default {
   '/': lMain(home),
   '/create/venue': lMain(venue),
-  'create/:venueId/time': lMain(time),
+  '/create/time': lMain(time),
 }
