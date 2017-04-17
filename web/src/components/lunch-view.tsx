@@ -14,7 +14,7 @@ export default function LunchView ({
       accepted: lunch.invites[key],
       ...user,
     }
-  }).sort(user => user.accepted === true ? 2 : user.accepted === null ? 1 : 0)
+  }).sort(user => user.accepted === true ? 0 : user.accepted === null ? 1 : 2)
   return (
     <div>
       <VenueHeader venue={lunch.place} />
