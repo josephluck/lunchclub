@@ -22,7 +22,7 @@ export default function () {
     models: {
       [Login.namespace]: Login.model(),
       [Lunch.namespace]: Lunch.model(),
-      [Authentication.namespace]: Authentication.model(),
+      [Authentication.namespace]: Authentication.model(dependencies),
       [MapSearch.namespace]: MapSearch.model(dependencies),
     },
   }

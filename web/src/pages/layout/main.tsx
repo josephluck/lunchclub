@@ -51,16 +51,20 @@ function layout (page: Helix.Page<Models>): Helix.Page<Models> {
     onUpdate: page.onUpdate,
     onLeave: page.onLeave,
     view (state, prev, actions) {
-      return (
-        <div>
-          <Nav />
-          {page.view(state, prev, actions)}
-          <Alert
-            state={state}
-            actions={actions}
-          />
-        </div>
-      )
+      if (state.authentication.user && state.authentication.token) {
+        return (
+          <div>
+            <Nav />
+            {page.view(state, prev, actions)}
+            <Alert
+              state={state}
+              actions={actions}
+            />
+          </div>
+        )
+      } else {
+        return <div />
+      }
     },
   }
 }
