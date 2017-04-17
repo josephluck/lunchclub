@@ -10,22 +10,20 @@ const LunchesList = ({
 }) => (
   <div className={`${className}`}>
     {lunches.map((lunch, index) => {
-      if (lunch.status === 'pending') {
-        return (
-          <ListItem
-            key={index}
-            className={index !== 0 ? 'bt' : ''}
-            avatar={lunch.place.avatar}
-            primary={lunch.place.name}
-            secondary={prettyDate(lunch.time)}
-            right={(
-              <Rating
-                rating={lunch.place.rating}
-              />
-            )}
-          />
-        )
-      }
+      return (
+        <ListItem
+          key={index}
+          className={index !== 0 ? 'bt' : ''}
+          avatar={lunch.place.avatar}
+          primary={lunch.place.name}
+          secondary={prettyDate(lunch.time)}
+          right={(
+            <Rating
+              rating={lunch.place.rating}
+            />
+          )}
+        />
+      )
     })}
   </div>
 )
