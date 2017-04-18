@@ -65,16 +65,14 @@ export function model ({
       },
       create (state, actions) {
         const ref = api.database().ref(`lunches/${random.random.uuid()}`)
-        const captain = state.authentication.user.id
         const invites = state.users.users.reduce((prev, curr) => {
           return {
             ...prev,
-            [curr.id]: curr.id === captain.id ? 'yes' : 'not-decided',
+            [curr.id]: curr.id === state.authentication.user.id ? 'yes' : 'not-decided',
           }
         }, {})
         ref.set({
           status: 'pending',
-          captain,
           invites,
         })
       },

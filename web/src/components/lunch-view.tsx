@@ -70,7 +70,7 @@ export default function LunchView ({
             <ListItem
               className='bb'
               avatar={currentUser.avatar}
-              primary={currentUser.name}
+              primary={currentUser.email}
               secondary={
                 lunchInThePast
                   ? currentUser.accepted === 'yes'
@@ -120,28 +120,34 @@ export default function LunchView ({
               key={index}
               avatar={invite.avatar}
               className={index !== 0 ? 'bt' : ''}
-              primary={invite.name}
+              primary={invite.email}
               secondary={
                 lunchInThePast
-                  ? invite.accepted === true
+                  ? invite.accepted === 'yes'
                     ? 'Went'
-                    : invite.accepted === false
+                    : invite.accepted === 'no'
                     ? 'Didn\'t Make It'
                     : 'Didn\'t Decide'
-                  : invite.accepted === true
+                  : invite.accepted === 'yes'
                     ? 'Going'
-                    : invite.accepted === false
+                    : invite.accepted === 'no'
                     ? 'Can\'t Make It'
                     : 'Hasn\'t Decided Yet'
               }
               right={(
-                <span
-                  className={`
-                    ${invite.accepted === true ? 'fc-green ss-check' : ''}
-                    ${invite.accepted === false ? 'fc-red ss-delete' : ''}
-                    ${invite.accepted === null ? 'fc-primary ss-hyphen' : ''}
-                  `}
-                />
+                <span>
+                  {invite.accepted === 'yes' ? 'Going' : ''}
+                  {invite.accepted === 'no' ? 'Not Going' : ''}
+                  {invite.accepted === 'not-decided' ? 'Hasn\'t Decided' : ''}
+                  <span
+                    className={`
+                      ml-1
+                      ${invite.accepted === 'yes' ? 'fc-green ss-check' : ''}
+                      ${invite.accepted === 'no' ? 'fc-red ss-delete' : ''}
+                      ${invite.accepted === 'not-decided' ? 'fc-primary ss-hyphen' : ''}
+                    `}
+                  />
+                </span>
               )}
             />
           )
