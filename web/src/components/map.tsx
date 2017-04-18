@@ -5,6 +5,9 @@ import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps'
 
 export default class MyGoogleMap extends Component<any, any> {
   shouldComponentUpdate (props) {
+    if (props.pure) {
+      return false
+    }
     const markersChanged = props.markers.length && this.props.markers.length && props.markers[0].position.lat !== this.props.markers[0].position.lat
     const locChanged = props.loc.lat !== this.props.loc.lat
     const zoomChanged = props.zoom !== this.props.zoom

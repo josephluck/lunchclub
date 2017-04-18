@@ -24,6 +24,7 @@ function VenueHeader ({
           key: venue.id,
           position: loc,
         }]}
+        pure={true}
       />
       <div
         className='pos-absolute posl-3 posr-3 posb-0 ta-c'

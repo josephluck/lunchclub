@@ -20,8 +20,18 @@ export default function LunchView ({
   })
   const currentUser = _invites.find(invite => invite.id === state.authentication.user.id)
   const invites = _invites
-    .filter(invite => invite.id !== currentUser.id)
-    .sort(invite => invite.accepted === true ? 0 : invite.accepted === null ? 1 : 2)
+    .sort(invite => {
+      if (invite.id !== currentUser.id) {
+        return 0
+      } else if (invite.accepted === 'yes') {
+        return 1
+      } else if (invite.accepted === 'not-decided') {
+        return 2
+      } else {
+        return 3
+      }
+    })
+    .reverse()
 
   return (
     <div>
@@ -42,77 +52,31 @@ export default function LunchView ({
           </div>
         </div>
 
-        {currentUser.accepted === 'not-decided' && !lunchInThePast
+        {!lunchInThePast
           ? (
             <div className='mb-2'>
               <div className='d-flex'>
                 <button
                   onClick={() => actions.lunch.updateDecision(currentUser.id, 'yes')}
-                  className='flex-1 mr-1 ta-c pa-2 bra-2 fw-500 fc-white bg-green'
-                  style={{
-                    border: 0,
-                  }}
+                  className={`
+                    flex-1 ta-c pa-2 bra-2 fw-500 ba bw-medium mr-1
+                    ${currentUser.accepted === 'yes' ? 'fc-white bg-green bc-green' : 'fc-green bg-white bc-green'}
+                  `}
                 >
                   {'I can make it'}
                 </button>
                 <button
                   onClick={() => actions.lunch.updateDecision(currentUser.id, 'no')}
-                  className='flex-1 ml-1 ta-c pa-2 bra-2 fw-500 fc-white bg-red'
-                  style={{
-                    border: 0,
-                  }}
+                  className={`
+                    flex-1 ta-c pa-2 bra-2 fw-500 ba bw-medium ml-1
+                    ${currentUser.accepted === 'no' ? 'fc-white bg-red bc-red' : 'fc-red bg-white bc-red'}
+                  `}
                 >
                   {'I can\'t make it'}
                 </button>
               </div>
             </div>
-          ) : (
-            <ListItem
-              className='bb'
-              avatar={currentUser.avatar}
-              primary={currentUser.email}
-              secondary={
-                lunchInThePast
-                  ? currentUser.accepted === 'yes'
-                    ? 'You Went'
-                    : currentUser.accepted === 'no'
-                    ? 'You Didn\'t Make It'
-                    : 'You Didn\'t Decide'
-                  : currentUser.accepted === 'yes'
-                    ? 'You\'re Going'
-                    : currentUser.accepted === 'no'
-                    ? 'You Can\'t Make It'
-                    : 'You Haven\'t Decided Yet'
-              }
-              right={lunchInThePast ? null : (
-                <div className='d-flex align-items-center'>
-                  <select
-                    value={currentUser.accepted.toString()}
-                    className='d-ib mr-1'
-                    disabled={lunchInThePast}
-                    style={{
-                      borderWidth: 0,
-                      background: 'transparent',
-                      direction: 'rtl',
-                    }}
-                    onChange={e => {
-                      actions.lunch.updateDecision(currentUser.id, e.target.value)
-                    }}
-                  >
-                    <option value={'yes'}>{'Going'}</option>
-                    <option value={'no'}>{'Not Going'}</option>
-                  </select>
-                  <span
-                    className={`
-                      ${currentUser.accepted === 'yes' ? 'fc-green ss-check' : ''}
-                      ${currentUser.accepted === 'no' ? 'fc-red ss-delete' : ''}
-                      ${currentUser.accepted === 'not-decided' ? 'fc-primary ss-hyphen' : ''}
-                    `}
-                  />
-                </div>
-              )}
-            />
-          )
+          ) : null
         }
         {invites.map((invite, index) => {
           return (
@@ -120,7 +84,7 @@ export default function LunchView ({
               key={index}
               avatar={invite.avatar}
               className={index !== 0 ? 'bt' : ''}
-              primary={invite.email}
+              primary={invite.name}
               secondary={
                 lunchInThePast
                   ? invite.accepted === 'yes'
@@ -135,19 +99,13 @@ export default function LunchView ({
                     : 'Hasn\'t Decided Yet'
               }
               right={(
-                <span>
-                  {invite.accepted === 'yes' ? 'Going' : ''}
-                  {invite.accepted === 'no' ? 'Not Going' : ''}
-                  {invite.accepted === 'not-decided' ? 'Hasn\'t Decided' : ''}
-                  <span
-                    className={`
-                      ml-1
-                      ${invite.accepted === 'yes' ? 'fc-green ss-check' : ''}
-                      ${invite.accepted === 'no' ? 'fc-red ss-delete' : ''}
-                      ${invite.accepted === 'not-decided' ? 'fc-primary ss-hyphen' : ''}
-                    `}
-                  />
-                </span>
+                <span
+                  className={`
+                    ${invite.accepted === 'yes' ? 'fc-green ss-check' : ''}
+                    ${invite.accepted === 'no' ? 'fc-red ss-delete' : ''}
+                    ${invite.accepted === 'not-decided' ? 'fc-primary ss-hyphen' : ''}
+                  `}
+                />
               )}
             />
           )
