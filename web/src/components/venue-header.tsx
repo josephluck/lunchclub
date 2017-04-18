@@ -4,22 +4,26 @@ import Rating from './rating-stars'
 
 interface Props {
   venue,
-  map,
   onClick?: () => any
-  onMapCreated: (map: any) => any
 }
 
 function VenueHeader ({
   venue,
-  map,
   onClick = () => null,
-  onMapCreated,
 }: Props) {
+  const loc = {
+    lat: venue.lat,
+    lng: venue.lng,
+  }
   return (
     <div className='w-100 h-9 pos-relative mb-4'>
       <GoogleMap
-        map={map}
-        onMapCreated={onMapCreated}
+        loc={loc}
+        zoom={18}
+        markers={[{
+          key: venue.id,
+          position: loc,
+        }]}
       />
       <div
         className='pos-absolute posl-3 posr-3 posb-0 ta-c'

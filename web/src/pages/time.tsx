@@ -13,11 +13,6 @@ const page: Helix.Page<Models> = {
         <div>
           <VenueHeader
             venue={state.lunch.lunch.place}
-            map={state.googleMap.map}
-            onMapCreated={(map) => {
-              actions.googleMap.setMap(map)
-              actions.googleMap.goToPlace(state.lunch.lunch.place)
-            }}
           />
           <div className='ph-3 pt-4'>
             {state.googleMap.times.map((time, index) => {

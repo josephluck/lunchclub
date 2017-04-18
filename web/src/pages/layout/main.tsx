@@ -3,7 +3,7 @@ import {Models} from '../../model'
 
 import Nav from '../../components/nav-bar'
 
-function layout (page: Helix.Page<Models>): Helix.Page<Models> {
+function layout (page: Helix.Page<Models>, back?: string): Helix.Page<Models> {
   return {
     onEnter (state, prev, actions) {
       actions.authentication.login()
@@ -19,7 +19,9 @@ function layout (page: Helix.Page<Models>): Helix.Page<Models> {
       if (state.authentication.user && state.authentication.token) {
         return (
           <div>
-            <Nav />
+            <Nav
+              back={back}
+            />
             {page.view(state, prev, actions)}
           </div>
         )

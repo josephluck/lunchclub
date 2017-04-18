@@ -20,6 +20,7 @@ const page: Helix.Page<Models> = {
       if (lunchInTheFuture) {
         return (
           <LunchView
+            lunch={state.lunch.lunch}
             state={state}
             actions={actions}
           />
@@ -79,6 +80,7 @@ const page: Helix.Page<Models> = {
             <LunchesList
               className='ph-3'
               lunches={lunches.filter(lunch => lunch.status === 'created')}
+              onClick={id => actions.location.set(`/lunches/${id}`)}
             />
           ) : null
         }

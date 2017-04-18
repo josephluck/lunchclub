@@ -3,11 +3,14 @@ import * as moment from 'moment'
 import ListItem from '../components/list-item'
 import VenueHeader from '../components/venue-header'
 
+const isFuture = (time) => moment(time).isAfter(moment())
+
 export default function LunchView ({
   state,
+  lunch,
   actions,
 }) {
-  const lunch = state.lunch.lunch
+  const lunchInThePast = lunch && lunch.status === 'created' && !isFuture(lunch.time)
   const _invites = Object.keys(lunch.invites).map(key => {
     const user = state.users.users.find(u => u.id === key)
     return {
@@ -24,19 +27,12 @@ export default function LunchView ({
     <div>
       <VenueHeader
         venue={lunch.place}
-        map={state.googleMap.map}
-        onClick={() => actions.location.set('/create/venue')}
-        onMapCreated={(map) => {
-          actions.googleMap.setMap(map)
-          actions.googleMap.goToPlace(lunch.place)
-        }}
+        onClick={() => lunchInThePast ? null : actions.location.set('/edit/venue')}
       />
       <div className='ph-3 pt-5'>
         <div
           className='mb-3 ta-c'
-          onClick={() => {
-            actions.location.set('/create/time')
-          }}
+          onClick={() => lunchInThePast ? null : actions.location.set('/edit/time')}
         >
           <div className='fc-grey-600 mb-1'>
             {moment(lunch.time).format('dddd, MMMM Do YYYY')}
@@ -46,7 +42,7 @@ export default function LunchView ({
           </div>
         </div>
 
-        {currentUser.accepted === 'not-decided'
+        {currentUser.accepted === 'not-decided' && !lunchInThePast
           ? (
             <div className='mb-2'>
               <div className='d-flex'>
@@ -76,17 +72,24 @@ export default function LunchView ({
               avatar={currentUser.avatar}
               primary={currentUser.name}
               secondary={
-                currentUser.accepted === 'yes'
-                  ? 'You\'re Going'
-                  : currentUser.accepted === 'no'
-                  ? 'You Can\'t Make It'
-                  : 'You Haven\'t Decided Yet'
+                lunchInThePast
+                  ? currentUser.accepted === 'yes'
+                    ? 'You Went'
+                    : currentUser.accepted === 'no'
+                    ? 'You Didn\'t Make It'
+                    : 'You Didn\'t Decide'
+                  : currentUser.accepted === 'yes'
+                    ? 'You\'re Going'
+                    : currentUser.accepted === 'no'
+                    ? 'You Can\'t Make It'
+                    : 'You Haven\'t Decided Yet'
               }
-              right={(
+              right={lunchInThePast ? null : (
                 <div className='d-flex align-items-center'>
                   <select
                     value={currentUser.accepted.toString()}
                     className='d-ib mr-1'
+                    disabled={lunchInThePast}
                     style={{
                       borderWidth: 0,
                       background: 'transparent',
@@ -119,11 +122,17 @@ export default function LunchView ({
               className={index !== 0 ? 'bt' : ''}
               primary={invite.name}
               secondary={
-                invite.accepted === true
-                  ? 'Going'
-                  : invite.accepted === false
-                  ? 'Can\'t Make It'
-                  : 'Hasn\'t Decided Yet'
+                lunchInThePast
+                  ? invite.accepted === true
+                    ? 'Went'
+                    : invite.accepted === false
+                    ? 'Didn\'t Make It'
+                    : 'Didn\'t Decide'
+                  : invite.accepted === true
+                    ? 'Going'
+                    : invite.accepted === false
+                    ? 'Can\'t Make It'
+                    : 'Hasn\'t Decided Yet'
               }
               right={(
                 <span

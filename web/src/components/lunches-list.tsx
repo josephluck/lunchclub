@@ -7,6 +7,7 @@ import prettyDate from '../utils/pretty-date'
 const LunchesList = ({
   lunches,
   className = '',
+  onClick,
 }) => (
   <div className={`${className}`}>
     {lunches.map((lunch, index) => {
@@ -17,6 +18,7 @@ const LunchesList = ({
           avatar={lunch.place.avatar}
           primary={lunch.place.name}
           secondary={prettyDate(lunch.time)}
+          onClick={() => onClick(lunch.id)}
           right={(
             <Rating
               rating={lunch.place.rating}

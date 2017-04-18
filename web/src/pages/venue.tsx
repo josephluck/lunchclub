@@ -6,18 +6,32 @@ import Rating from '../components/rating'
 import GoogleMap from '../components/map'
 
 const page: Helix.Page<Models> = {
+  onEnter (_state, _prev, actions) {
+    actions.googleMap.getUsersLoc()
+      .then(actions.googleMap.getNearbyPlaces)
+  },
   view (state, prev, actions) {
     const localState = state.googleMap
+    const markers = localState.places.map(place => {
+      return {
+        key: place.id,
+        position: {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        },
+      }
+    })
     return (
       <div>
         <div className='w-100 h-9 pos-relative'>
-          <GoogleMap
-            map={state.googleMap.map}
-            onMapCreated={(map) => {
-              actions.googleMap.setMap(map)
-              actions.googleMap.getNearbyPlaces()
-            }}
-          />
+          {localState.usersLoc
+            ? (
+              <GoogleMap
+                loc={localState.usersLoc}
+                markers={markers}
+              />
+            ) : null
+          }
           <div
             className='pos-absolute posl-3 posr-3 posb-0'
             style={{

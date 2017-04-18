@@ -21,7 +21,8 @@
     "firebase": "^3.7.8",
     "google-map-react": "^0.24.0",
     "helix-react": "git://github.com/josephluck/helix-react",
-    "moment": "^2.18.1"
+    "moment": "^2.18.1",
+    "react-google-maps": "^6.0.1"
   },
   "author": "",
   "license": "ISC",
