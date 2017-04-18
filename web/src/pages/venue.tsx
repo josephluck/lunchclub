@@ -7,14 +7,15 @@ import GoogleMap from '../components/map'
 
 const page: Helix.Page<Models> = {
   view (state, prev, actions) {
-    const localState = state.create
+    const localState = state.googleMap
     return (
       <div>
         <div className='w-100 h-9 pos-relative'>
           <GoogleMap
+            map={state.googleMap.map}
             onMapCreated={(map) => {
-              actions.create.setMap(map)
-              actions.create.getNearbyPlaces()
+              actions.googleMap.setMap(map)
+              actions.googleMap.getNearbyPlaces()
             }}
           />
           <div
@@ -25,7 +26,7 @@ const page: Helix.Page<Models> = {
           >
             <TextField
               placeholder={'Search for a Venue'}
-              oninput={actions.create.search}
+              oninput={actions.googleMap.search}
               value={localState.query}
               autoFocus
             />

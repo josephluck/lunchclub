@@ -3,7 +3,7 @@ import * as moment from 'moment'
 import {Models} from './'
 
 export interface State {
-  map: any
+  map: google.maps.Map
   query: string
   places: any[]
   times: moment.Moment[]
@@ -19,14 +19,17 @@ export interface Effects {
   search: Helix.Effect<Models, string>
   getNearbyPlaces: Helix.Effect0<Models>
   searchPlaces: Helix.Effect<Models, string>
+  goToPlace: Helix.Effect<Models, any>
 }
 
 export type Actions = Helix.Actions<Reducers, Effects>
 
-export const namespace: keyof Namespace = 'create'
-export interface Namespace { 'create': ModelApi }
+export const namespace: keyof Namespace = 'googleMap'
+export interface Namespace { 'googleMap': ModelApi }
 
 export type ModelApi = Helix.ModelApi<State, Actions>
+
+let markers = []
 
 export function model ({
   places,
@@ -77,6 +80,22 @@ export function model ({
           centerMap(map, bounds)
         })
       }, 1000),
+      goToPlace (state, actions, place) {
+        const map = state.googleMap.map
+        markers.forEach(marker => {
+          marker.setMap(null)
+        })
+        const position = new google.maps.LatLng(place.lat, place.lng)
+        map.panTo(position)
+        map.setCenter(position)
+        const marker = new google.maps.Marker({
+          position,
+          animation: google.maps.Animation.DROP,
+          map,
+          title: place.name,
+        })
+        markers.push(marker)
+      },
     },
   }
 }
@@ -89,7 +108,6 @@ function centerMap (map: google.maps.Map, bounds) {
   }
 }
 
-let markers = []
 function addMarkersToMap (map: google.maps.Map, places: google.maps.places.PlaceResult[]) {
   let bounds = new google.maps.LatLngBounds()
   markers.forEach(marker => {

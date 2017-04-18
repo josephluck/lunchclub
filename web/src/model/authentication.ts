@@ -53,7 +53,12 @@ export function model ({
         }
         api.auth().onAuthStateChanged((user) => {
           if (user) {
-            actions.authentication.setUser(user)
+            actions.authentication.setUser({
+              id: user.uid,
+              name: user.displayName,
+              email: user.email,
+              avatar: user.photoURL,
+            })
           }
         })
       },

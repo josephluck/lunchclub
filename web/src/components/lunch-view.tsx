@@ -8,18 +8,36 @@ export default function LunchView ({
   actions,
 }) {
   const lunch = state.lunch.lunch
-  const invites = Object.keys(lunch.invites).map(key => {
+  const _invites = Object.keys(lunch.invites).map(key => {
     const user = state.users.users.find(u => u.id === key)
     return {
       accepted: lunch.invites[key],
       ...user,
     }
-  }).sort(user => user.accepted === true ? 0 : user.accepted === null ? 1 : 2)
+  })
+  const currentUser = _invites.find(invite => invite.id === state.authentication.user.id)
+  const invites = _invites
+    .filter(invite => invite.id !== currentUser.id)
+    .sort(invite => invite.accepted === true ? 0 : invite.accepted === null ? 1 : 2)
+
   return (
     <div>
-      <VenueHeader venue={lunch.place} />
+      <VenueHeader
+        venue={lunch.place}
+        map={state.googleMap.map}
+        onClick={() => actions.location.set('/create/venue')}
+        onMapCreated={(map) => {
+          actions.googleMap.setMap(map)
+          actions.googleMap.goToPlace(lunch.place)
+        }}
+      />
       <div className='ph-3 pt-5'>
-        <div className='mb-3 ta-c'>
+        <div
+          className='mb-3 ta-c'
+          onClick={() => {
+            actions.location.set('/create/time')
+          }}
+        >
           <div className='fc-grey-600 mb-1'>
             {moment(lunch.time).format('dddd, MMMM Do YYYY')}
           </div>
@@ -28,6 +46,71 @@ export default function LunchView ({
           </div>
         </div>
 
+        {currentUser.accepted === 'not-decided'
+          ? (
+            <div className='mb-2'>
+              <div className='d-flex'>
+                <button
+                  onClick={() => actions.lunch.updateDecision(currentUser.id, 'yes')}
+                  className='flex-1 mr-1 ta-c pa-2 bra-2 fw-500 fc-white bg-green'
+                  style={{
+                    border: 0,
+                  }}
+                >
+                  {'I can make it'}
+                </button>
+                <button
+                  onClick={() => actions.lunch.updateDecision(currentUser.id, 'no')}
+                  className='flex-1 ml-1 ta-c pa-2 bra-2 fw-500 fc-white bg-red'
+                  style={{
+                    border: 0,
+                  }}
+                >
+                  {'I can\'t make it'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <ListItem
+              className='bb'
+              avatar={currentUser.avatar}
+              primary={currentUser.name}
+              secondary={
+                currentUser.accepted === 'yes'
+                  ? 'You\'re Going'
+                  : currentUser.accepted === 'no'
+                  ? 'You Can\'t Make It'
+                  : 'You Haven\'t Decided Yet'
+              }
+              right={(
+                <div className='d-flex align-items-center'>
+                  <select
+                    value={currentUser.accepted.toString()}
+                    className='d-ib mr-1'
+                    style={{
+                      borderWidth: 0,
+                      background: 'transparent',
+                      direction: 'rtl',
+                    }}
+                    onChange={e => {
+                      actions.lunch.updateDecision(currentUser.id, e.target.value)
+                    }}
+                  >
+                    <option value={'yes'}>{'Going'}</option>
+                    <option value={'no'}>{'Not Going'}</option>
+                  </select>
+                  <span
+                    className={`
+                      ${currentUser.accepted === 'yes' ? 'fc-green ss-check' : ''}
+                      ${currentUser.accepted === 'no' ? 'fc-red ss-delete' : ''}
+                      ${currentUser.accepted === 'not-decided' ? 'fc-primary ss-hyphen' : ''}
+                    `}
+                  />
+                </div>
+              )}
+            />
+          )
+        }
         {invites.map((invite, index) => {
           return (
             <ListItem

@@ -42,6 +42,10 @@ declare namespace Helix {
   }
 
   // Effects
+  export type Effect1<M extends Models<any>, P, Q> = {
+    impl: (state: M['state'], actions: M['actions'], payload: P, payload2: Q) => any
+    api: (payload: P, payload2: Q) => any
+  }
   export type Effect<M extends Models<any>, P> = {
     impl: (state: M['state'], actions: M['actions'], payload: P) => any
     api: (payload: P) => any

@@ -16,6 +16,7 @@ export interface Effects {
   update: Helix.Effect<Models, any>
   updatePlace: Helix.Effect<Models, any>
   updateTime: Helix.Effect<Models, number>
+  updateDecision: Helix.Effect1<Models, string, boolean>
 }
 
 export type Actions = Helix.Actions<Reducers, Effects>
@@ -64,20 +65,17 @@ export function model ({
       },
       create (state, actions) {
         const ref = api.database().ref(`lunches/${random.random.uuid()}`)
-        const captain = state.authentication.user.uid
+        const captain = state.authentication.user.id
         const invites = state.users.users.reduce((prev, curr) => {
           return {
             ...prev,
-            [curr.id]: null,
+            [curr.id]: curr.id === captain.id ? 'yes' : 'not-decided',
           }
         }, {})
         ref.set({
           status: 'pending',
           captain,
-          invites: {
-            ...invites,
-            [captain]: true,
-          },
+          invites,
         })
       },
       update (state, actions, payload) {
@@ -90,6 +88,14 @@ export function model ({
       updateTime (state, actions, time) {
         actions.lunch.update({ status: 'created', time })
       },
+      updateDecision (state, actions, userId, decision) {
+        actions.lunch.update({
+          invites: {
+            ...state.lunch.lunch.invites,
+            [userId]: decision,
+          }
+        })
+      }
     },
   }
 }
